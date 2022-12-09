@@ -1,14 +1,14 @@
 /*-------------------------------- Constants --------------------------------*/
 
-const choices = ["x", "o"]
+
 
 /*---------------------------- Variables (state) ----------------------------*/
 
-let board, turn, winnner, tie
+let board, turn, winner, tie
 
 /*------------------------ Cached Element References ------------------------*/
 
-const squareEls = document.getElementById("sq0", "sq1", "sq2", "sq3", "sq4", )
+const squareEls = document.querySelectorAll(".sqr")
 const messageEl = document.getElementById("message")
 
 /*----------------------------- Event Listeners -----------------------------*/
@@ -16,83 +16,46 @@ const messageEl = document.getElementById("message")
 
 
 /*-------------------------------- Functions --------------------------------*/
-
+init ()
 function init(startUp){
-  let board = ["null", "null", "null", "null", "null", "null", "null", "null", "null"]
-  let turn = 1
-  let winner = false
-  let tie = false
-  function(render)
+  board = [null, null, null, null, null, null, null, null]
+  turn = 1
+  inner = false
+  tie = false
+  render()
 }
 console.log(init);
 
+function render(){
+  updateBoard()
+  updateMessage()
+}
 
-// Step 1 - Define the required variables used to track the state of the game
+function updateBoard(){
+  board.forEach((sqr, i) {
+    sqr = squareEls
+    if (sqr === 1){
+      squareEls[i].innerText = "X"
+    } else if (sqr === -1) {
+      squareEls[i].innerText = "O"
+    } else {
+      squareEls[i].innerText = ""
+    }
+  })
+}    
 
-  // 1a) Use a variable named `board` to represent the state of the squares on
-  //     the board.
-
-  // 1b) Use a variable named `turn` to track whose turn it is.
-
-  // 1c) Use a variable named `winner` to represent if anyone has won yet.
-
-  // 1d) Use a variable named `tie` to represent if the game has ended in a tie.
-
-
-// Step 2 - Store cached element references.
-
-  // 2a) In a constant called `squareEls`, store the nine elements 
-  //    representing the squares on the page.
-
-  // 2b) In a constant called `messageEl`, store the element that displays the 
-  //    game's status on the page.
-
-
-// Step 3 - Upon loading, the game state should be initialized, and a function 
-//          should be called to render this game state.
-
-  // 3a) Create a function called `init`.
-
-  // 3b) Call this `init` function when the app loads.
-  
-  // 3c) Set the `board` variable to an array containing nine `null`s to 
-  //    represent empty squares.
-
-  // 3d) Set the `turn` to `1` - which will represent player X.
-
-  // 3e) Set the `winner` to false.
-
-  // 3f) Set `tie` to false.
-
-  // 3g) Call a function called `render` at the end of the `init` function.
+function updateMessage(){
+  if (winner === false && tie === false) {
+    messageEl.textContent = turn === -1 ? "Player O's turn" : "Player X's turn"
+  } else if (winner === false && tie === true) {
+    messageEl.textContent = "Tie!!"
+  } else {
+    messageEl.textContent = turn === -1 ? "Player O wins!" : "Player X wins!"
+  }
+}
 
 
-// Step 4 - The state of the game should be rendered to the user
 
-  // 4a) Create a function called `render`, then set it aside for now.
-
-  // 4b) Create a function called `updateBoard`.
-
-  // 4c) In the `updateBoard` function, loop over `board` and for each element:
-  //     - Use the current index of the iteration to access the corresponding 
-  //       square in the `squareEls` array.
-  //     - Style that square however you wish, dependent on the value  
-  //       contained in the current cell being iterated over (`-1`, `1`, or
-  //       `null`). To keep it simple, start with just putting a letter in 
-  //       each square depending on what the the value of each cell is.
-
-  // 4d) Create a function called `updateMessage`
-  
-  // 4e) In the `updateMessage` function, render a message based on the 
-  //     current game state:
-  //     - If both `winner` and `tie` have a value of false (meaning the game 
-  //       is still in progress), render whose turn it is.
-  //     - If `winner` is false, but `tie` is true, render a tie message.
-  //     - Otherwise, render a congratulatory message to the player that has 
-  //       won.
-
-  // 4f) Invoke both the `updateBoard` and the `updateMessage` functions
-  //     inside of your `render` function.
 
 // Step 5 - Define the required constants
 
