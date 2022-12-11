@@ -1,5 +1,14 @@
 /*-------------------------------- Constants --------------------------------*/
-
+const winningCombos = [
+  [0, 1, 2],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
+  [6, 7, 8],
+  [3, 4, 5]
+]
 
 
 /*---------------------------- Variables (state) ----------------------------*/
@@ -10,141 +19,109 @@ let board, turn, winner, tie
 
 const squareEls = document.querySelectorAll(".sqr")
 const messageEl = document.getElementById("message")
-
+const resetBtnEl = document.querySelectorAll(".reset")
 /*----------------------------- Event Listeners -----------------------------*/
 
-
+squareEls.forEach(square => square.addEventListener("click", handleclick))
+resetBtnEl.addEventListener("click", init)
 
 /*-------------------------------- Functions --------------------------------*/
 init ()
-function init(startUp){
+function init(){
   board = [null, null, null, null, null, null, null, null]
   turn = 1
-  inner = false
+  winner = false
   tie = false
   render()
 }
 console.log(init);
 
-function render(){
+function handleclick(evt){
+  console.log("test!!!", evt.target.id)
+  const sqIdx = evt.target.id.slice(2)
+  console.log("blahhhhhhh", sqIdx)
+   if(board[sqIdx] !== null){
+    return 
+   }
+   if (winner === true){
+    return
+   }
+   placePiece(sqIdx)
+   checkForTie()
+   checkforWinner()
+   switchPlayerTurn()
+   render()
+  }
+
+
+  function placePiece(idx){
+    board[idx] = turn
+   }
+   
+   function checkForTie(){
+     if (!board.includes(null)){
+       tie = true
+     }
+   }
+   
+   function checkforWinner(){
+     for(let i = 0; i < winningCombos.length; i++){
+       if (Math.abs(
+         board[winningCombos[i][0]] +
+         board[winningCombos[i][1]] +
+         board[winningCombos[i][2]]
+       ) === 3 ) {
+         winner = true
+       }
+     } 
+   }
+   
+   function switchPlayerTurn (){
+     if (winner === true){
+       return
+     }
+     turn *= -1
+   }
+
+  function render(){
   updateBoard()
   updateMessage()
+  console.log(board);
 }
 
 function updateBoard(){
-  board.forEach((sqr, i) {
-    sqr = squareEls
+  board.forEach((sqr, i) => {
     if (sqr === 1){
-      squareEls[i].innerText = "X"
-    } else if (sqr === -1) {
-      squareEls[i].innerText = "O"
-    } else {
-      squareEls[i].innerText = ""
+      squareEls[i].textContent = "X"
+    } 
+    if (sqr === -1) {
+      squareEls[i].textContent = "O"
     }
+    if (sqr === null) {
+      squareEls[i].textContent = ""
+    }
+  
   })
 }    
 
 function updateMessage(){
-  if (winner === false && tie === false) {
-    messageEl.textContent = turn === -1 ? "Player O's turn" : "Player X's turn"
-  } else if (winner === false && tie === true) {
+  if (!winner && !tie) {
+    if (turn > 0){
+      messageEl.textContent = `It's X's turn.`
+    } else {
+      messageEl.textContent = `It's O's turn`
+    }
+  } else if (!winner && tie) {
     messageEl.textContent = "Tie!!"
   } else {
-    messageEl.textContent = turn === -1 ? "Player O wins!" : "Player X wins!"
+    if(turn > 0){
+      messageEl.textContent = "Player X wins!"
+    } else {
+      messageEl.textContent = "Player O wins!"
+    }
   }
 }
 
-
-
-
-// Step 5 - Define the required constants
-
-  // 5a) In a constant called `winningCombos` define the eight possible winning 
-  //     combinations as an array of arrays.
-
-
-// Step 6 - Handle a player clicking a square with a `handleClick` function
-
-  // 6a) Create a function called `handleClick`. It will have an `evt`
-  //     parameter.
-
-  // 6b) Attach an event listener to the game board (you can do this to each
-  //     one of the existing `squareEls` with a `forEach` loop OR add a new
-  //     cached element reference that will allow you to take advantage of 
-  //     event bubbling). On the `'click'` event, it should call the 
-  //    `handleClick` function you created in 6a.
-
-  // 6c) Obtain the index of the square that was clicked by "extracting" the 
-  //     index from an `id` assigned to the target element in the HTML. Assign 
-  //     this to a constant called `sqIdx`.
-
-  // 6d) If the `board` has a value at the `sqIdx`, immediately `return`  
-  //     because that square is already taken. Also, if `winner` is not `null`
-  //     immediately `return` because the game is over.
-
-
-// Step 6.1 - `placePiece`
-
-  // 6.1a) Create a function named placePiece that accepts an `idx` parameter.
-
-  // 6.1b) Update the `board` array at the `idx` so that it is equal to the 
-  //       current value of `turn`.
-
-
-// 6.2 - `checkForTie`
-
-  // 6.2a) Create a function named `checkForTie`.
-
-  // 6.2b) Check if the `board` array still contains any `null` elements. If
-  //       it does, we can leave `tie` as false. Otherwise, set `tie` to true.
-
-
-// 6.3 - `checkForWinner`
-
-  // 6.3a) Create a function called `checkForWinner`
-
-  // 6.3b) Determine if a player has won using one of the two options below.
-  //       Option 1 is a more elegant method that takes advantage of the 
-  //       `winningCombos` array you wrote above in step 5. Option 2 might 
-  //       be a little simpler to comprehend, but you'll need to write more 
-  //       code. This option won't take advantage of the winningCombos array, 
-  //       but using it as a reference will help you build a solution.
-  //       Ensure you choose only one path.
-
-  //       Option 1) Loop through each of the winning combination arrays 
-  //       defined in the `winningCombos` array. Total up the three board 
-  //       positions using the three indexes in the current combo. Convert 
-  //       the total to an absolute value (convert any negative total to 
-  //       positive). If the total equals 3, we have a winner, and can set 
-  //       `winner` to true.
-
-  //       Option 2) For each one of the winning combinations you wrote in 
-  //       step 5, find the total of each winning combination. Convert the 
-  //       total to an absolute value (convert any negative total to 
-  //       positive). If the total equals 3, we have a winner, and can set 
-  //       `winner` to true.
-
-
-// 6.4 - `switchPlayerTurn`
-
-  // 6.4a) Create a function called `switchPlayerTurn`.
-
-  // 6.4b) If `winner` is true, return out of the function - we don’t need 
-  //       to switch the turn anymore!
-
-  // 6.4c) If `winner` is false, change the turn by multiplying `turn` by 
-  //       `-1` (this flips a `1` to `-1`, and vice-versa).
-
-
-// 6.5 - Tying it all together
-
-  // 6.5a) In our `handleClick` function, call `placePiece`, `checkForTie`, 
-  //       `checkForWinner`, and `switchPlayerTurn`. Don’t forget that 
-  //       `placePiece` needs `sqIdx` as an argument! 
-
-  // 6.5b) Finally, now that all the state has been updated we need to 
-  //       render that updated state to the user by calling the `render` 
-  //       function that we wrote earlier.
 
 // Step 7 - Create Reset functionality
 
