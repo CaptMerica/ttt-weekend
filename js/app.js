@@ -19,7 +19,7 @@ let board, turn, winner, tie
 
 const squareEls = document.querySelectorAll(".sqr")
 const messageEl = document.getElementById("message")
-const resetBtnEl = document.querySelectorAll(".reset")
+const resetBtnEl = document.getElementById("reset")
 /*----------------------------- Event Listeners -----------------------------*/
 
 squareEls.forEach(square => square.addEventListener("click", handleclick))
@@ -27,8 +27,8 @@ resetBtnEl.addEventListener("click", init)
 
 /*-------------------------------- Functions --------------------------------*/
 init ()
-function init(){
-  board = [null, null, null, null, null, null, null, null]
+function init() {
+  board = [null, null, null, null, null, null, null, null, null]
   turn = 1
   winner = false
   tie = false
@@ -37,51 +37,49 @@ function init(){
 console.log(init);
 
 function handleclick(evt){
-  console.log("test!!!", evt.target.id)
-  const sqIdx = evt.target.id.slice(2)
-  console.log("blahhhhhhh", sqIdx)
-   if(board[sqIdx] !== null){
+  const sqIdx = Number(evt.target.id.slice(2))
+  if(board[sqIdx] !== null){
     return 
-   }
-   if (winner === true){
+  }
+  if (winner === true){
     return
-   }
-   placePiece(sqIdx)
-   checkForTie()
-   checkforWinner()
-   switchPlayerTurn()
-   render()
+  }
+  placePiece(sqIdx)
+  checkForTie()
+  checkforWinner()
+  switchPlayerTurn()
+  render()
   }
 
 
   function placePiece(idx){
     board[idx] = turn
-   }
-   
-   function checkForTie(){
-     if (!board.includes(null)){
-       tie = true
-     }
-   }
-   
-   function checkforWinner(){
-     for(let i = 0; i < winningCombos.length; i++){
-       if (Math.abs(
-         board[winningCombos[i][0]] +
-         board[winningCombos[i][1]] +
-         board[winningCombos[i][2]]
-       ) === 3 ) {
-         winner = true
-       }
-     } 
-   }
-   
-   function switchPlayerTurn (){
-     if (winner === true){
-       return
-     }
+  }
+  
+  function checkForTie(){
+    if (!board.includes(null)){
+      tie = true
+    }
+  }
+  
+  function checkforWinner(){
+    for(let i = 0; i < winningCombos.length; i++){
+      if (Math.abs(
+        board[winningCombos[i][0]] +
+        board[winningCombos[i][1]] +
+        board[winningCombos[i][2]]
+      ) === 3 ) {
+        winner = true
+      }
+    } 
+  }
+  
+  function switchPlayerTurn (){
+    if (winner === true){
+      return
+    }
      turn *= -1
-   }
+  }
 
   function render(){
   updateBoard()
@@ -123,12 +121,3 @@ function updateMessage(){
 }
 
 
-// Step 7 - Create Reset functionality
-
-  // 7a) Add a reset button to the HTML document.
-
-  // 7b) Store the new reset button element as a cached element reference in
-  //     a constant named `resetBtnEl`.
-
-  // 7c) Attach an event listener to the `resetBtnEl`. On the `'click'` event 
-  //     it should call the `init` function you created in step 3.
